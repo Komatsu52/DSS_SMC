@@ -1,56 +1,35 @@
 package smc.Business;
 
-import smc.Data.ConteudoDAO;
-
 import java.util.HashMap;
 import java.util.Map;
 
 public class Playlist {
-    private Map<String, String> myMusicas;
-    private ConteudoDAO conteudo;
+    private Map<String, String> myConteudo;
 
     public Playlist(){
-        this.myMusicas = new HashMap<>();
-        this.conteudo = new ConteudoDAO();
+        this.myConteudo = new HashMap<>();
     }
 
-    public Playlist(Map<String, String> mm, ConteudoDAO c){
-        this.setMyMusicas(mm);
-        this.setConteudo(c);
+    public Playlist(Map<String, String> mm){
+        this.setMyConteudo(mm);
     }
 
     public Playlist(Playlist p){
-        this.myMusicas = p.getMyMusicas();
-        this.conteudo = p.getConteudo();
+        this.myConteudo = p.getMyConteudo();
     }
 
-    public ConteudoDAO getConteudo() {
-        ConteudoDAO aux = new ConteudoDAO();
-        for(String k : this.conteudo.keySet()){
-            aux.put(k, this.conteudo.get(k));
-        }
-        return aux;
-    }
-
-    public void setConteudo(ConteudoDAO c) {
-        this.conteudo = new ConteudoDAO();
-        for(String k : c.keySet()){
-            this.conteudo.put(k, c.get(k));
-        }
-    }
-
-    public Map<String, String> getMyMusicas(){
+    public Map<String, String> getMyConteudo(){
         Map<String, String> aux = new HashMap<>();
-        for(String k : this.myMusicas.keySet()){
-            aux.put(k, this.myMusicas.get(k));
+        for(String k : this.myConteudo.keySet()){
+            aux.put(k, this.myConteudo.get(k));
         }
         return aux;
     }
 
-    public void setMyMusicas(Map<String, String> mm) {
-        this.myMusicas = new HashMap<>();
+    public void setMyConteudo(Map<String, String> mm) {
+        this.myConteudo = new HashMap<>();
         for(String k : mm.keySet()){
-            this.myMusicas.put(k, mm.get(k));
+            this.myConteudo.put(k, mm.get(k));
         }
     }
 
@@ -60,8 +39,7 @@ public class Playlist {
 
     public int hashCode() {
         int hash = 7;
-        hash = 31 * hash + this.myMusicas.hashCode();
-        hash = 31 * hash + this.conteudo.hashCode();
+        hash = 31 * hash + this.myConteudo.hashCode();
         return hash;
     }
 
@@ -72,8 +50,7 @@ public class Playlist {
             return false;
         else {
             Playlist p = (Playlist) o;
-            return (p.getMyMusicas().equals(this.getMyMusicas())
-                    && p.getConteudo().equals(this.getConteudo()));
+            return (p.getMyConteudo().equals(this.getMyConteudo()));
         }
     }
 }

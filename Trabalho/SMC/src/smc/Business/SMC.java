@@ -16,18 +16,20 @@ public class SMC {
     private ComumDAO comuns;
     private ConteudoDAO conteudo;
 
+    public SMC(){
+        this.admins = new AdministradorDAO();
+        this.comuns = new ComumDAO();
+        this.conteudo = new ConteudoDAO();
+    }
+
     /* Iniciar sessão */
 
     public boolean utilizadorExistente(String n){
-        if(this.comuns.containsKey(n) || this.admins.containsKey(n))
-            return true;
-        return false;
+        return (this.comuns.containsKey(n) || this.admins.containsKey(n));
     }
 
     public boolean validarSessao(String n, String p){
-        if(this.admins.get(n).getPassword() == p || this.comuns.get(n).getPassword() == p)
-            return true;
-        return false;
+        return (this.admins.get(n).getPassword().equals(p) || this.comuns.get(n).getPassword().equals(p));
     }
 
     public Utilizador iniciarSessao(String n, String p)  throws UtilizadorInexistente, PasswordInvalida{
@@ -70,7 +72,7 @@ public class SMC {
     }
 
     public void registarComum(String nome, String email, String pass){
-        Comum c = new Comum(nome, pass, email, new HashMap<>(), new HashMap<>(), this.conteudo, this.comuns, new ArrayList<>(), new ArrayList<>());
+        Comum c = new Comum(nome, pass, email, new HashMap<>(), new HashMap<>(), new ArrayList<>(), new ArrayList<>());
         this.comuns.put(nome, c);
     }
 
@@ -98,19 +100,15 @@ public class SMC {
         return l;
     }
 
-    public void showUtilizador(List<Conteudo> x, Utilizador u){
+    public void showUtilizador(List<Conteudo> x, String n){
         for(Conteudo c : x){
-            this.comuns.get(u).getBiblioteca().add(c);
-            if(c.getNome().endswith(".mp3"))
-                this.comuns.getVideos().add(c);
-            else
-                this.comuns.getMusicas().add(c);
+            this.comuns.adicionarConteudo(c, n);
         }
     }
 
-    public void addPotenciais(List<Conteudo> x, Utilizador u){
+    public void addPotenciais(List<Conteudo> x, String n){
         for(Utilizador another : this.comuns.getComuns())
-            for(Conteudo from_antoher : aux.getBiblioteca())
+            for(Conteudo from_antoher : another.getBiblioteca())
                 for(Conteudo from_x : x)
                     if(from_antoher.equals(from_x))
                         this.comuns.get(u).getPotenciaisAmigos().add(another);
@@ -139,30 +137,26 @@ public class SMC {
         }
     }
 
-    public void upload(List<Conteudo> conteudo, Comum c) throws ConteudoInvalido{
+    public void upload(List<Conteudo> conteudo, String n) throws ConteudoInvalido{
         boolean valid = validarConteudo(conteudo);
         if(!valid)
             throw new ConteudoInvalido("O conteudo + " + conteudo + " tem ficheiro(s) com formato inválido.");
         List<Conteudo> existe = conteudoIgual(conteudo);
         if(existe.size() != 0){
-            showUtilizador(existe, c);
-            addPotenciais(existe, c);
+            showUtilizador(existe, n);
+            addPotenciais(existe, n);
             existe = elimina(existe, conteudo);
         }
         geraCategorias(conteudo);
         carrega(conteudo);
-        showUtilizador(conteudo, c);
-        addPotenciais(conteudo, c);
+        showUtilizador(conteudo, n);
+        addPotenciais(conteudo, n);
     }
 
     /* Alterar Categoria de Conteúdo */
 
-    public void alterarCategoria(String nome, Comum c, String categoria){
-        this.comuns.alterarCategoria(nome, c, categoria);
-    }
-
-    public void alterarConteudo(String nome, Comum c, String categoria){
-        alterarCategoria(nome, c, categoria);
+    public void alterarCatConteudo(String comum, String nome, String categoria){
+        this.comuns.alterarCategoria(comum, nome, categoria);
     }
 
     /* Reproduzir Conteúdo */
@@ -172,12 +166,13 @@ public class SMC {
             return false;
         return true;
     }
-    public List<Conteudo> existeConteudo() throws ConteudoInexistente{
+    public boolean existeConteudo() throws ConteudoInexistente{
         boolean valid = validarExistencia();
         if(!valid)
             throw  new ConteudoInexistente("Não existe conteúdo na biblioteca do sistema.");
-        return this.conteudo.getBiblioteca();
+        return valid;
     }
+
     public void play(String c){
         InputStream conteudo;
         try{
@@ -193,17 +188,17 @@ public class SMC {
         play(c);
     }
 
-    public boolean validarExistenciaPlaylist(Utilizador u){
-        if(this.comuns.get(u).getPlaylists().size() == 0)
+    public boolean validarExistenciaPlaylist(String n){
+        if(this.comuns.get(n).getPlaylists().size() == 0)
             return false;
         return true;
     }
 
-    public HashMap<String, List<Conteudo>> existePlaylists(Utilizador u) throws PlaylistsInexistentes{
-        boolean valid = validarExistenciaPlaylist(u);
+    public Map<String, Playlist> existePlaylists(String n) throws PlaylistsInexistentes{
+        boolean valid = validarExistenciaPlaylist(n);
         if(!valid)
             throw  new PlaylistsInexistentes("Você não tem playlists.");
-        return this.comuns.get(u).getPlaylists();
+        return this.comuns.get(n).getPlaylists();
     }
 
     public void playPlaylist(List<String> playlist){
@@ -211,11 +206,11 @@ public class SMC {
             play(s);
     }
 
-    public void reproduzirPlaylist(String p, Utilizador u,boolean shuffle){
-        List<Conteudo> playlist = this.comuns.get(u).getPlaylists().get(p);
+    public void reproduzirPlaylist(String p, String n,boolean shuffle){
+        List<String> aux = this.comuns.getPlaylistEspecifica(n, p);
         if(shuffle)
-            Collections.shuffle(playlist);
-        playPlaylist(playlist);
+            Collections.shuffle(aux);
+        playPlaylist(aux);
     }
     public void aleatorio(){
         Set<String> x = this.conteudo.keySet();
@@ -238,11 +233,12 @@ public class SMC {
 
     /* Download Conteúdo */
 
-    public Set<String> biblioteca(Comum c){
-        return this.comuns.get(c).getMyMusicas().keySet();
+    public Set<String> biblioteca(String n){
+        return this.comuns.get(n).getMyConteudo().keySet();
     }
 
     public void download(String conteudo){
         down(conteudo);
     }
+
 }
