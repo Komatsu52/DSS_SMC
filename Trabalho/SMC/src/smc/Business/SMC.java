@@ -1,5 +1,8 @@
+package smc.Business;
 
-
+import smc.Data.AdministradorDAO;
+import smc.Data.ComumDAO;
+import smc.Data.ConteudoDAO;
 import sun.audio.AudioPlayer;
 import sun.audio.AudioStream;
 import javax.swing.*;
@@ -22,7 +25,19 @@ public class SMC {
         this.conteudo = new ConteudoDAO();
     }
 
-                        /* Iniciar sessão */
+    public String[] getCategorias() {
+        String[] aux = new String[this.categorias.length];
+        for(int i = 0; i < this.categorias.length; i++)
+            aux[i] = this.categorias[i];
+        return aux;
+    }
+
+    public void setCategorias(String[] cat) {
+        for(int i = 0; i < cat.length; i++)
+            this.categorias[i] = cat[i];
+    }
+
+    /* Iniciar sessão */
 
     /**
      * Verifica se existe no sistema algum Utilizador Comum
@@ -84,6 +99,13 @@ public class SMC {
     }
 
                        /* Registar utilizador */
+
+    /**
+     *
+     */
+    public int choose(int option){
+        return option;
+    }
 
     /**
      * Verifica se existe no sistema algum Utilizador Comum

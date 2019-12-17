@@ -1,6 +1,5 @@
-import java.lang.reflect.Array;
+package smc.Business;
 
-import java.time.Duration;
 
 public class Conteudo {
     private String nome;

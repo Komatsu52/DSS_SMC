@@ -95,7 +95,7 @@ public class ComumDAO implements Map<String, Comum> {
                 c.setPassword(rs.getString("password_Comum"));
 
                 Map<String, String> mus = new HashMap<>();
-                ps = con.prepareStatement("SELECT * FROM MyConteudo WHERE Comum_nome_Comum = ?");
+                ps = con.prepareStatement("SELECT * FROM MyConteudo WHERE nome_Comum = ?");
                 ps.setString(1, (String) key);
                 rs = ps.executeQuery();
                 while(rs.next()){
@@ -106,13 +106,13 @@ public class ComumDAO implements Map<String, Comum> {
                 Map<String, Playlist> play = new HashMap<>();
                 PreparedStatement ps2;
                 ResultSet rs2;
-                ps = con.prepareStatement("SELECT * FROM Playlist WHERE Comum_nome_Comum = ?");
+                ps = con.prepareStatement("SELECT * FROM Playlist nome_Comum = ?");
                 ps.setString(1, (String) key);
                 rs = ps.executeQuery();
                 while (rs.next()){
                     Map<String, String> aux = new HashMap<>();
                     Playlist auxplay = new Playlist();
-                    ps2 = con.prepareStatement("SELECT * FROM ConteudoPlaylist WHERE Playlist_Comum_nome_Comum = ? AND Playlist_nome_Playlist = ?");
+                    ps2 = con.prepareStatement("SELECT * FROM ConteudoPlaylist WHERE nome_Comum = ? AND nome_Playlist = ?");
                     ps2.setString(1, (String) key);
                     ps2.setString(2, rs.getString("nome_Playlist"));
                     rs2 = ps2.executeQuery();
@@ -125,7 +125,7 @@ public class ComumDAO implements Map<String, Comum> {
                 c.setPlaylists(play);
 
                 List<String> ami = new ArrayList<>();
-                ps = con.prepareStatement("SELECT * FROM Amigo WHERE Comum_nome_Comum = ?");
+                ps = con.prepareStatement("SELECT * FROM Amigo WHERE nome_Comum = ?");
                 ps.setString(1,(String) key);
                 rs = ps.executeQuery();
                 while(rs.next()){
@@ -134,7 +134,7 @@ public class ComumDAO implements Map<String, Comum> {
                 c.setAmigos(ami);
 
                 List<String> potami = new ArrayList<>();
-                ps = con.prepareStatement("SELECT * FROM PotAmigo WHERE Comum_nome_Comum = ?");
+                ps = con.prepareStatement("SELECT * FROM PotAmigo WHERE nome_Comum = ?");
                 ps.setString(1,(String) key);
                 rs = ps.executeQuery();
                 while(rs.next()){
@@ -179,7 +179,7 @@ public class ComumDAO implements Map<String, Comum> {
             Map<String, String> mus = value.getMyConteudo();
             if(mus.keySet().size()!=0){
                 for(String m : mus.keySet()){
-                    ps = con.prepareStatement("INSERT INTO MyConteudo (Comum_nome_Comum,nome_MyConteudo,categoria_MyConteudo) VALUES (?,?,?)");
+                    ps = con.prepareStatement("INSERT INTO MyConteudo (nome_Comum,nome_MyConteudo,categoria_MyConteudo) VALUES (?,?,?)");
                     ps.setString(1, key);
                     ps.setString(2, m);
                     ps.setString(3, mus.get(m));
@@ -190,7 +190,7 @@ public class ComumDAO implements Map<String, Comum> {
             Map<String, Playlist> play = value.getPlaylists();
             if(play.keySet().size()!=0){
                 for(String p : play.keySet()){
-                    ps = con.prepareStatement("INSERT INTO Playlist (Comum_nome_Comum,nome_Playlist) VALUES (?,?)");
+                    ps = con.prepareStatement("INSERT INTO Playlist (nome_Comum,nome_Playlist) VALUES (?,?)");
                     ps.setString(1, key);
                     ps.setString(2, p);
                     ps.executeUpdate();
@@ -198,7 +198,7 @@ public class ComumDAO implements Map<String, Comum> {
                     mus = play.get(p).getMyConteudo();
                     if(mus.keySet().size()!=0){
                         for (String m : mus.keySet()) {
-                            ps = con.prepareStatement("INSERT INTO ConteudoPlaylist (Playlist_Comum_nome_Comum,Playlist_nome_Playlist,nome_ContPlay,categoria_ContPlay) VALUES (?,?,?,?)");
+                            ps = con.prepareStatement("INSERT INTO ConteudoPlaylist (nome_Comum,nome_Playlist,nome_ContPlay,categoria_ContPlay) VALUES (?,?,?,?)");
                             ps.setString(1, key);
                             ps.setString(2, p);
                             ps.setString(3, m);
@@ -212,7 +212,7 @@ public class ComumDAO implements Map<String, Comum> {
             List<String> ami = value.getAmigos();
             if(ami.size()!=0){
                 for(String a : ami){
-                    ps = con.prepareStatement("INSERT INTO Amigo (Comum_nome_Comum,nome_Amigo) VALUES (?,?)");
+                    ps = con.prepareStatement("INSERT INTO Amigo (nome_Comum,nome_Amigo) VALUES (?,?)");
                     ps.setString(1,key);
                     ps.setString(2,a);
                     ps.executeUpdate();
@@ -222,7 +222,7 @@ public class ComumDAO implements Map<String, Comum> {
             ami = value.getPotAmigos();
             if(ami.size()!=0){
                 for(String a : ami){
-                    ps = con.prepareStatement("INSERT INTO PotAmigo (Comum_nome_Comum,nome_PotAmigo) VALUES (?,?)");
+                    ps = con.prepareStatement("INSERT INTO PotAmigo (nome_Comum,nome_PotAmigo) VALUES (?,?)");
                     ps.setString(1,key);
                     ps.setString(2,a);
                     ps.executeUpdate();
@@ -250,22 +250,22 @@ public class ComumDAO implements Map<String, Comum> {
             PreparedStatement ps = con.prepareStatement("DELETE FROM Comum WHERE nome_Comum = ?");
             ps.setString(1, (String) key);
             ps.executeUpdate();
-            ps = con.prepareStatement("DELETE FROM MyConteudo WHERE Comum_nome_Comum = ?");
+            ps = con.prepareStatement("DELETE FROM MyConteudo WHERE nome_Comum = ?");
             ps.setString(1, (String) key);
             ps.executeUpdate();
-            ps = con.prepareStatement("DELETE FROM Playlist WHERE Comum_nome_Comum = ?");
+            ps = con.prepareStatement("DELETE FROM Playlist WHERE nome_Comum = ?");
             ps.setString(1, (String) key);
             ps.executeUpdate();
-            ps = con.prepareStatement("DELETE FROM ConteudoPlaylist WHERE Playlist_Comum_nome_Comum = ?");
+            ps = con.prepareStatement("DELETE FROM ConteudoPlaylist WHERE nome_Comum = ?");
             ps.setString(1, (String) key);
             ps.executeUpdate();
-            ps = con.prepareStatement("DELETE FROM Amigo WHERE Comum_nome_Comum = ?");
+            ps = con.prepareStatement("DELETE FROM Amigo WHERE nome_Comum = ?");
             ps.setString(1, (String) key);
             ps.executeUpdate();
             ps = con.prepareStatement("DELETE FROM Amigo WHERE nome_Amigo = ?");
             ps.setString(1, (String) key);
             ps.executeUpdate();
-            ps = con.prepareStatement("DELETE FROM PotAmigo WHERE Comum_nome_Comum = ?");
+            ps = con.prepareStatement("DELETE FROM PotAmigo WHERE nome_Comum = ?");
             ps.setString(1, (String) key);
             ps.executeUpdate();
             ps = con.prepareStatement("DELETE FROM PotAmigo WHERE nome_PotAmigo = ?");
@@ -394,7 +394,7 @@ public class ComumDAO implements Map<String, Comum> {
     public void adicionarConteudo(Conteudo c, String n){
         try{
             con = Connect.connect();
-            PreparedStatement ps = con.prepareStatement("INSERT INTO MyConteudo (Comum_nome_Comum,nome_MyConteudo,categoria_MyConteudo) VALUES (?,?,?)");
+            PreparedStatement ps = con.prepareStatement("INSERT INTO MyConteudo (nome_Comum,nome_MyConteudo,categoria_MyConteudo) VALUES (?,?,?)");
             ps.setString(1, n);
             ps.setString(2, c.getNome());
             ps.setString(3, c.getCategoria());
@@ -416,11 +416,11 @@ public class ComumDAO implements Map<String, Comum> {
     public void alterarCategoria(String comum, String nome, String categoria){
         try{
             con = Connect.connect();
-            PreparedStatement ps = con.prepareStatement("DELETE FROM MyConteudo WHERE Comum_nome_Comum = ? AND nome_MyConteudo = ?");
+            PreparedStatement ps = con.prepareStatement("DELETE FROM MyConteudo WHERE nome_Comum = ? AND nome_MyConteudo = ?");
             ps.setString(1, comum);
             ps.setString(2, nome);
             ps.executeUpdate();
-            ps = con.prepareStatement("INSERT INTO MyConteudo (Comum_nome_Comum,nome_MyConteudo,categoria_MyConteudo) VALUES (?,?,?)");
+            ps = con.prepareStatement("INSERT INTO MyConteudo (nome_Comum,nome_MyConteudo,categoria_MyConteudo) VALUES (?,?,?)");
             ps.setString(1, comum);
             ps.setString(2, nome);
             ps.setString(3, categoria);
@@ -443,7 +443,7 @@ public class ComumDAO implements Map<String, Comum> {
         List<String> aux = new ArrayList<>();
         try {
             con = Connect.connect();
-            PreparedStatement ps = con.prepareStatement("SELECT FROM ConteudoPlaylist WHERE Playlist_Comum_nome_Comum = ? AND Playlist_nome_Playlist = ?");
+            PreparedStatement ps = con.prepareStatement("SELECT FROM ConteudoPlaylist WHERE nome_Comum = ? AND nome_Playlist = ?");
             ps.setString(1, nomeC);
             ps.setString(2, nomeP);
             ResultSet rs = ps.executeQuery();
@@ -463,5 +463,61 @@ public class ComumDAO implements Map<String, Comum> {
             }
         }
         return aux;
+    }
+
+    public void atualizaPotAmigos(List<String> mus, String n){
+        List<String> potAmi = new ArrayList<>();
+        List<String> ami = new ArrayList<>();
+        String aux;
+        try {
+            con = Connect.connect();
+            PreparedStatement ps = con.prepareStatement("SELECT FROM PotAmigo WHERE nome_Comum = ?");
+            ps.setString(1, n);
+            ResultSet rs = ps.executeQuery();
+            while(rs.next()){
+                potAmi.add(rs.getString("nome_PotAmigo"));
+            }
+
+            ps = con.prepareStatement("DELETE FROM PotAmigo WHERE nome_Comum = ?");
+            ps.setString(1, n);
+            ps.executeUpdate();
+
+            ps = con.prepareStatement("SELECT FROM Amigo WHERE nome_Comum = ?");
+            ps.setString(1, n);
+            rs = ps.executeQuery();
+            while(rs.next()){
+                ami.add(rs.getString("nome_Amigo"));
+            }
+
+            for(String m : mus){
+                ps = con.prepareStatement("SELECT FROM MyConteudo WHERE nome_MyConteudo = ?");
+                ps.setString(1, m);
+                rs = ps.executeQuery();
+                while (rs.next()){
+                    aux = rs.getString("nome_Comum");
+                    if(!(ami.contains(aux)))
+                        potAmi.add(aux);
+                }
+
+            }
+
+            for(String pa : potAmi){
+                ps = con.prepareStatement("INSERT INTO PotAmigo (nome_Comum,nome_PotAmigo) VALUES (?,?)");
+                ps.setString(1, n);
+                ps.setString(2, pa);
+                ps.executeUpdate();
+            }
+        }
+        catch(SQLException e){
+            System.out.printf(e.getMessage());
+        }
+        finally{
+            try{
+                Connect.close(con);
+            }
+            catch(Exception e){
+                System.out.printf(e.getMessage());
+            }
+        }
     }
 }

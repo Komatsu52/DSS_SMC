@@ -91,7 +91,7 @@ public class ConteudoDAO implements Map<String, Conteudo> {
                 c.setNome(rs.getString("nome_Conteudo"));
                 c.setPath(rs.getString("path_Conteudo"));
                 c.setArtista(rs.getString("artista_Conteudo"));
-                c.setCategoria(rs.getString("categora_Conteudo"));
+                c.setCategoria(rs.getString("categoria_Conteudo"));
 
             }
         }

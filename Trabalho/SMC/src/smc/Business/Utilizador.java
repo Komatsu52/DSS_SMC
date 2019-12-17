@@ -1,3 +1,4 @@
+package smc.Business;
 
 public abstract class Utilizador {
 

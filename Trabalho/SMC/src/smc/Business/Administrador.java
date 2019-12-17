@@ -1,3 +1,6 @@
+package smc.Business;
+
+import smc.Business.Utilizador;
 
 public class Administrador extends Utilizador {
 

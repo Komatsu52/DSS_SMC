@@ -1,3 +1,6 @@
+package smc.Business;
+
+import smc.Business.Utilizador;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -130,10 +133,5 @@ public class Comum extends Utilizador {
                 + ";\nPassword: " + this.getPassword()
                 + ";\nEmail: " + this.getEmail()
                 + ";\n";
-    }
-
-    public void alterarCategoria(String nome, String cat) {
-        this.myConteudo.remove(nome);
-        this.myConteudo.put(nome, cat);
     }
 }
