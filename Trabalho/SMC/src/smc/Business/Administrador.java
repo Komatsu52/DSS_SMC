@@ -1,4 +1,3 @@
-package smc.Business;
 
 public class Administrador extends Utilizador {
 

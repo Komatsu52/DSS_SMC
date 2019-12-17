@@ -1,4 +1,3 @@
-package smc.Business;
 
 public abstract class Utilizador {
 
@@ -6,19 +5,19 @@ public abstract class Utilizador {
     private String password;
     private String email;
 
-    public Utilizador(){
+    public Utilizador() {
         this.nome = "";
         this.password = "";
         this.email = "";
     }
 
-    public Utilizador(String n, String p, String e){
+    public Utilizador(String n, String p, String e) {
         this.setNome(n);
         this.setPassword(p);
         this.setEmail(e);
     }
 
-    public Utilizador(Utilizador d){
+    public Utilizador(Utilizador d) {
         this.nome = d.getNome();
         this.password = d.getPassword();
         this.email = d.getEmail();

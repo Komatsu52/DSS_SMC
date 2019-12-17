@@ -1,4 +1,4 @@
-package smc.Business;
+import java.lang.reflect.Array;
 
 import java.time.Duration;
 
@@ -8,21 +8,21 @@ public class Conteudo {
     private String artista;
     private String categoria;
 
-    public Conteudo(){
+    public Conteudo() {
         this.nome = "";
         this.path = "";
         this.artista = "";
         this.categoria = "";
     }
 
-    public Conteudo(String n, String p, String a, String c){
+    public Conteudo(String n, String p, String a, String c) {
         this.setNome(n);
         this.setPath(p);
         this.setArtista(a);
         this.setCategoria(c);
     }
 
-    public Conteudo(Conteudo c){
+    public Conteudo(Conteudo c) {
         this.nome = c.getNome();
         this.path = c.getPath();
         this.artista = c.getArtista();
@@ -61,7 +61,7 @@ public class Conteudo {
         this.categoria = c;
     }
 
-    public Conteudo clone(){
+    public Conteudo clone() {
         return new Conteudo(this);
     }
 
@@ -88,7 +88,7 @@ public class Conteudo {
         }
     }
 
-    public String toString(){
+    public String toString() {
         return "Nome: " + this.getNome()
                 + ";\nArtista: " + this.getArtista()
                 + ";\nCategoria: " + this.getCategoria()

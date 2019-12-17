@@ -1,18 +1,16 @@
-package smc.Business;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class Comum extends Utilizador{
+public class Comum extends Utilizador {
 
     private Map<String, String> myConteudo;
     private Map<String, Playlist> playlists;
     private List<String> amigos;
     private List<String> potAmigos;
 
-    public Comum(){
+    public Comum() {
         super();
         this.myConteudo = new HashMap<>();
         this.playlists = new HashMap<>();
@@ -20,7 +18,7 @@ public class Comum extends Utilizador{
         this.potAmigos = new ArrayList<>();
     }
 
-    public Comum(String n, String p, String e, Map<String, String> mm, Map<String, Playlist> play, List<String> a, List<String> pa){
+    public Comum(String n, String p, String e, Map<String, String> mm, Map<String, Playlist> play, List<String> a, List<String> pa) {
         super(n, p, e);
         this.setMyConteudo(mm);
         this.setPlaylists(play);
@@ -28,7 +26,7 @@ public class Comum extends Utilizador{
         this.setPotAmigos(pa);
     }
 
-    public Comum (Comum a){
+    public Comum(Comum a) {
         super(a);
         this.myConteudo = a.getMyConteudo();
         this.playlists = a.getPlaylists();
@@ -38,7 +36,7 @@ public class Comum extends Utilizador{
 
     public Map<String, String> getMyConteudo() {
         Map<String, String> aux = new HashMap<>();
-        for(String k : this.myConteudo.keySet()){
+        for (String k : this.myConteudo.keySet()) {
             aux.put(k, this.myConteudo.get(k));
         }
         return aux;
@@ -46,27 +44,27 @@ public class Comum extends Utilizador{
 
     public void setMyConteudo(Map<String, String> mm) {
         this.myConteudo = new HashMap<>();
-        for(String k : mm.keySet()){
+        for (String k : mm.keySet()) {
             this.myConteudo.put(k, mm.get(k));
         }
     }
 
-    public Map<String, Playlist> getPlaylists(){
+    public Map<String, Playlist> getPlaylists() {
         Map<String, Playlist> aux = new HashMap<>();
-        for(String s : this.playlists.keySet())
+        for (String s : this.playlists.keySet())
             aux.put(s, this.playlists.get(s));
         return aux;
     }
 
     public void setPlaylists(Map<String, Playlist> p) {
         this.playlists = new HashMap<>();
-        for(String s : p.keySet())
+        for (String s : p.keySet())
             this.playlists.put(s, p.get(s));
     }
 
     public List<String> getAmigos() {
         List<String> aux = new ArrayList<>();
-        for(String s : this.amigos){
+        for (String s : this.amigos) {
             aux.add(s);
         }
         return aux;
@@ -74,14 +72,14 @@ public class Comum extends Utilizador{
 
     public void setAmigos(List<String> a) {
         this.amigos = new ArrayList<>();
-        for(String s : a){
+        for (String s : a) {
             this.amigos.add(s);
         }
     }
 
     public List<String> getPotAmigos() {
         List<String> aux = new ArrayList<>();
-        for(String s : this.potAmigos){
+        for (String s : this.potAmigos) {
             aux.add(s);
         }
         return aux;
@@ -89,7 +87,7 @@ public class Comum extends Utilizador{
 
     public void setPotAmigos(List<String> a) {
         this.potAmigos = new ArrayList<>();
-        for(String s : a){
+        for (String s : a) {
             this.potAmigos.add(s);
         }
     }
@@ -99,11 +97,11 @@ public class Comum extends Utilizador{
     }
 
     public boolean equals(Object o) {
-        if(o == this)
+        if (o == this)
             return true;
-        if(o == null || o.getClass() != this.getClass())
+        if (o == null || o.getClass() != this.getClass())
             return false;
-        else{
+        else {
             Comum a = (Comum) o;
             return (a.getEmail().equals(this.getEmail())
                     && a.getNome().equals(this.getNome())
@@ -127,14 +125,14 @@ public class Comum extends Utilizador{
         return hash;
     }
 
-    public String toString(){
+    public String toString() {
         return "Nome: " + this.getNome()
-                   + ";\nPassword: " + this.getPassword()
-                   + ";\nEmail: " + this.getEmail()
-                   + ";\n";
+                + ";\nPassword: " + this.getPassword()
+                + ";\nEmail: " + this.getEmail()
+                + ";\n";
     }
 
-    public void alterarCategoria(String nome, String cat){
+    public void alterarCategoria(String nome, String cat) {
         this.myConteudo.remove(nome);
         this.myConteudo.put(nome, cat);
     }
