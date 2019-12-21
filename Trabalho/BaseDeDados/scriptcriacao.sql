@@ -97,6 +97,15 @@ CREATE TABLE IF NOT EXISTS `mydb`.`ConteudoPlaylist` (
 ENGINE = InnoDB;
 
 
+-- -----------------------------------------------------
+-- Table `mydb`.`PedidoAmi`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `mydb`.`PedidoAmi` (
+  `nome_Comum` VARCHAR(64) NOT NULL,
+  `nome_PedidoAmi` VARCHAR(45) NOT NULL)
+ENGINE = InnoDB;
+
+
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;

@@ -182,11 +182,11 @@ public class ConteudoDAO implements Map<String, Conteudo> {
 
         try{
             con = Connect.connect();
-            PreparedStatement ps = con.prepareStatement("DELETE * FROM Conteudo");
+            PreparedStatement ps = con.prepareStatement("DELETE FROM Conteudo");
             ps.executeUpdate();
-            ps = con.prepareStatement("DELETE * FROM MyConteudo");
+            ps = con.prepareStatement("DELETE FROM MyConteudo");
             ps.executeUpdate();
-            ps = con.prepareStatement("DELETE * FROM ConteudoPlaylist");
+            ps = con.prepareStatement("DELETE FROM ConteudoPlaylist");
             ps.executeUpdate();
         }
         catch(SQLException e){

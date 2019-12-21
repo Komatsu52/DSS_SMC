@@ -162,7 +162,7 @@ public class SMC {
      * @param pass pass do Utilizador
      */
     public void registarComum(String nome, String email, String pass){
-        Comum c = new Comum(nome, pass, email, new HashMap<>(), new HashMap<>(), new ArrayList<>(), new ArrayList<>());
+        Comum c = new Comum(nome, pass, email, new HashMap<>(), new HashMap<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
         this.comuns.put(nome, c);
     }
 

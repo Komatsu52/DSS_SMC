@@ -12,6 +12,7 @@ public class Comum extends Utilizador {
     private Map<String, Playlist> playlists;
     private List<String> amigos;
     private List<String> potAmigos;
+    private List<String> pedidosAmi;
 
     public Comum() {
         super();
@@ -19,14 +20,16 @@ public class Comum extends Utilizador {
         this.playlists = new HashMap<>();
         this.amigos = new ArrayList<>();
         this.potAmigos = new ArrayList<>();
+        this.pedidosAmi = new ArrayList<>();
     }
 
-    public Comum(String n, String p, String e, Map<String, String> mm, Map<String, Playlist> play, List<String> a, List<String> pa) {
+    public Comum(String n, String p, String e, Map<String, String> mm, Map<String, Playlist> play, List<String> a, List<String> pa, List<String> ped){
         super(n, p, e);
         this.setMyConteudo(mm);
         this.setPlaylists(play);
         this.setAmigos(a);
         this.setPotAmigos(pa);
+        this.setPedidosAmi(ped);
     }
 
     public Comum(Comum a) {
@@ -35,6 +38,7 @@ public class Comum extends Utilizador {
         this.playlists = a.getPlaylists();
         this.amigos = a.getAmigos();
         this.potAmigos = a.getPotAmigos();
+        this.pedidosAmi = a.getPedidosAmi();
     }
 
     public Map<String, String> getMyConteudo() {
@@ -95,6 +99,20 @@ public class Comum extends Utilizador {
         }
     }
 
+    public List<String> getPedidosAmi() {
+        List<String> aux = new ArrayList<>();
+        for (String s : this.pedidosAmi) {
+            aux.add(s);
+        }
+        return aux;
+    }
+
+    public void setPedidosAmi(List<String> a) {
+        this.pedidosAmi = new ArrayList<>();
+        for (String s : a) {
+            this.pedidosAmi.add(s);
+        }
+    }
     public Comum clone() {
         return new Comum(this);
     }
@@ -112,7 +130,8 @@ public class Comum extends Utilizador {
                     && a.getMyConteudo().equals(this.getMyConteudo())
                     && a.getPlaylists().equals(this.getPlaylists())
                     && a.getAmigos().equals(this.getAmigos())
-                    && a.getPotAmigos().equals(this.getPotAmigos()));
+                    && a.getPotAmigos().equals(this.getPotAmigos())
+                    && a.getPedidosAmi().equals(this.getPedidosAmi()));
         }
     }
 
@@ -125,6 +144,7 @@ public class Comum extends Utilizador {
         hash = 31 * hash + this.getPlaylists().hashCode();
         hash = 31 * hash + this.getAmigos().hashCode();
         hash = 31 * hash + this.getPotAmigos().hashCode();
+        hash = 31 * hash + this.getPedidosAmi().hashCode();
         return hash;
     }
 

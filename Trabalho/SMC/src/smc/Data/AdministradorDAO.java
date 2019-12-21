@@ -172,7 +172,7 @@ public class AdministradorDAO implements Map<String, Administrador> {
 
         try{
             con = Connect.connect();
-            PreparedStatement ps = con.prepareStatement("DELETE * FROM Administrador");
+            PreparedStatement ps = con.prepareStatement("DELETE FROM Administrador");
             ps.executeUpdate();
         }
         catch(SQLException e){
