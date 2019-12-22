@@ -25,19 +25,7 @@ public class SMC {
         this.conteudo = new ConteudoDAO();
     }
 
-    public String[] getCategorias() {
-        String[] aux = new String[this.categorias.length];
-        for(int i = 0; i < this.categorias.length; i++)
-            aux[i] = this.categorias[i];
-        return aux;
-    }
-
-    public void setCategorias(String[] cat) {
-        for(int i = 0; i < cat.length; i++)
-            this.categorias[i] = cat[i];
-    }
-
-    /* Iniciar sessão */
+                        /* Iniciar sessão */
 
     /**
      * Verifica se existe no sistema algum Utilizador Comum
@@ -101,13 +89,6 @@ public class SMC {
                        /* Registar utilizador */
 
     /**
-     *
-     */
-    public int choose(int option){
-        return option;
-    }
-
-    /**
      * Verifica se existe no sistema algum Utilizador Comum
      * com o nome inserido. Caso não exista, verifica se
      * o email inserido já foi utilizado por outro utilizador.
@@ -162,7 +143,7 @@ public class SMC {
      * @param pass pass do Utilizador
      */
     public void registarComum(String nome, String email, String pass){
-        Comum c = new Comum(nome, pass, email, new HashMap<>(), new HashMap<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+        Comum c = new Comum(nome, pass, email, new HashMap<>(), new HashMap<>(), new ArrayList<>(), new ArrayList<>());
         this.comuns.put(nome, c);
     }
 
@@ -261,6 +242,13 @@ public class SMC {
             this.conteudo.put(x, ct);
         }
     }
+
+    public List<String> copyString(List<String> conteudo){
+        List<String> conteudo_a_carregar = new ArrayList<>();
+        for(String x : conteudo)
+            conteudo_a_carregar.add(x);
+        return conteudo_a_carregar;
+    }
     /**
      * Dá upload de conteúdo
      * @param conteudo  lista dos nomes dos conteúdo a dar upload
@@ -272,23 +260,40 @@ public class SMC {
         if(!valid)
             throw new ConteudoInvalido("O conteudo + " + conteudo + " tem ficheiro(s) com formato inválido.");
         List<String> existe = conteudoIgual(conteudo);
+        List<String> conteudo_a_carregar = copyString(conteudo);
         int tamanho = existe.size();
         if(tamanho != 0)
-            conteudo = elimina(existe, conteudo);
-        carrega(conteudo);
+            conteudo_a_carregar = elimina(existe, conteudo);
+        carrega(conteudo_a_carregar);
         showUtilizador(conteudo, utilizador);
         addPotenciais(conteudo, utilizador);
 
     }
 
                 /* Alterar Categoria de Conteúdo */
+
+    /*
+    public boolean validarExistencia(){
+        if(this.conteudo.size() == 0)
+            return false;
+        return true;
+    }
+
+
+    public List<String> existeConteudo() throws ConteudoInexistente{
+        boolean valid = validarExistencia();
+        if(!valid)
+            throw  new ConteudoInexistente("Não existe conteúdo na biblioteca do sistema.");
+        Set<String> x =this.conteudo.keySet();
+        return new ArrayList<>(x);
+    }*/
     /**
      * Altera a categoria de determinado conteúdo.
      * @param comum que altera categoria
      * @param nome  do conteudo
      * @param categoria nova categoria
      */
-    public void alterarCatConteudo(String comum, String nome, String categoria){
+    public void alterarConteudo(String comum, String nome, String categoria){
         this.comuns.alterarCategoria(comum, nome, categoria);
     }
 
@@ -415,7 +420,7 @@ public class SMC {
     /**
      * Devolve o conteudo da biblioteca do utilizador.
      * @param n nome do Utilizador
-     * @return lista de potenciais amigos
+     * @return biblioteca do utilizador
      */
     public List<String> bibliotecaAux(String n){
         Set<String> x = this.comuns.get(n).getMyConteudo().keySet();
@@ -425,7 +430,7 @@ public class SMC {
     /**
      * Invoca o metodo que devolve o conteudo da biblioteca do utilizador.
      * @param n nome do Utilizador
-     * @return lista de potenciais amigos
+     * @return biblioteca do utilizador
      */
     public List<String> biblioteca(String n){
         return bibliotecaAux(n);
@@ -570,4 +575,311 @@ public class SMC {
                 alterarPassAdmin(nome_atual, novo_nome);
         }
     }
+
+                        /* Eliminar Utilizador */
+
+    /**
+     * Metodo que elimina um utilizador.
+     * @param nome  do Utilizador
+     * @throws UtilizadorInexistente
+     */
+    public void eliminarUtilizador(String nome) throws UtilizadorInexistente{
+        boolean valid = this.comuns.containsKey(nome);
+        boolean valid2 = this.admins.containsKey(nome);
+        if(!valid && !valid2)
+            throw new UtilizadorInexistente("O utilizador inserido não existe.");
+        if(valid)
+            this.comuns.remove(nome);
+        else
+            this.admins.remove(nome);
+    }
+
+                    /* Remover conteúdo */
+/*
+
+    public List<String> bibliotecaAux(String n){
+        Set<String> x = this.comuns.get(n).getMyConteudo().keySet();
+        return new ArrayList<>(x);
+    }
+
+    public List<String> biblioteca(String n){
+        return bibliotecaAux(n);
+    }
+*/
+    /**
+     * Metodo que remove determinado conteúdo.
+     * @param conteudo  a remover
+     */
+    public void removerConteudo(String conteudo){
+        this.conteudo.remove(conteudo);
+    }
+
+                    /* Enviar Pedido */
+    /**
+     * Metodo que adiciona um pedido à lista de pedidos pendentes de um utilizador
+     * @param nome  do Utilizador
+     * @param amigo a adicionar
+     */
+    public void send(String nome, String amigo){
+        List<String> lista = this.comuns.get(amigo).getPedidosAmi();
+        lista.add(nome);
+        this.comuns.get(amigo).setPedidosAmi(lista);
+    }
+
+    /**
+     * Metodo que envia pedido de amizade a um utilizador.
+     * @param nome  do Utilizador
+     * @param amigo a adicionar
+     * @throws UtilizadorInexistente
+     */
+    public void enviarPedido(String nome, String amigo) throws  UtilizadorInexistente{
+        boolean valid = this.comuns.containsKey(amigo);
+        if(!valid)
+            throw new UtilizadorInexistente("O utilizador inserido não existe.");
+        send(nome, amigo);
+    }
+
+                        /* Responder Pedido */
+
+    /**
+     * Devolve a lista de pedidos de um utilizador.
+     * @param n nome do Utilizador
+     * @return lista de potenciais amigos
+     */
+    public List<String> pendentesAux(String n){
+        Set<String> x = this.comuns.get(n).getPedidosAmi().keySet();
+        return new ArrayList<>(x);
+    }
+
+    /**
+     * Invoca o metodo que devolve a lista de pedidos de um utilizador.
+     * @param n nome do Utilizador
+     * @return lista de potenciais amigos
+     */
+    public List<String> pendentes(String n){
+        return pendentesAux(n);
+    }
+
+    /**
+     * Metodo que remove um pedido da lista de pedidos pendentes de um utilizador
+     * @param nome  do Utilizador
+     * @param amigo a remover dos pendentes
+     */
+    public void removePedido(String nome, String amigo){
+        List<String> lista = this.comuns.get(nome).getPedidosAmi();
+        lista.remove(amigo);
+        this.comuns.get(nome).setPedidosAmi(lista);
+    }
+
+    /**
+     * Metodo que adiciona um user à lista de amigos de um utilizador
+     * @param nome  do Utilizador
+     * @param amigo a adicionar
+     */
+    public void add_buddy(String nome, String amigo){
+        List<String> lista = this.comuns.get(nome).getAmigos();
+        List<String> lista_amigo = this.comuns.get(amigo).getAmigos();
+        lista.add(amigo);
+        lista_amigo.add(nome);
+        this.comuns.get(nome).setAmigos(lista);
+        this.comuns.get(amigo).setAmigos(lista_amigo);
+    }
+
+    /**
+     * Metodo que responde a um pedido de amigo pendente
+     * @param nome  do Utilizador
+     * @param amigo a adicionar
+     */
+    public void responderPedido(String nome, int resposta, String amigo){
+        removePedido(nome, amigo);
+        if(resposta == 1)
+            add_buddy(nome, amigo);
+    }
+
+                    /* Criar playlist */
+
+    /**
+     * Metodo auxiliar que verifica se existe uma playlist com o nome dado
+     * @param utilizador    nome do Utilizador
+     * @param playlist  a verificar
+     */
+    public boolean checkNameAux(String utilizador, String playlist){
+        Map<String, Playlist> x = this.comuns.get(utilizador).getPlaylists();
+        return x.containsKey(playlist);
+    }
+
+    /**
+     * Metodo que verifica se existe uma playlist com o nome dado
+     * @param utilizador    nome do Utilizador
+     * @param playlist  a verificar
+     */
+    public void checkName(String utilizador, String playlist) throws PlaylistsInexistentes{
+        boolean valid = checkNameAux(utilizador, playlist);
+        if(!valid)
+            throw new PlaylistsInexistentes("Já contém uma playlist com esse nome");
+    }
+
+    /**
+     * Cria uma playlist aleatória.
+     * @param utilizador    nome do Utilizador
+     * @param playlist  a criar
+     */
+    public void criar_Play_aleatoria(String utilizador, String playlist){
+        Map<String, String> map = this.comuns.get(utilizador).getMyConteudo();
+        List<String> nomes = new ArrayList<>(map.keySet());
+        Collections.shuffle(nomes);
+
+        Map<String, String> y = new HashMap<>();
+        for(String a : nomes){
+            String categoria = map.get(a);
+            y.put(a, categoria);
+            if(y.size() == 20)
+                break;
+        }
+
+        Playlist p = new Playlist(y);
+        Map<String, Playlist> playlists = this.comuns.get(utilizador).getPlaylists();
+        playlists.put(playlist, p);
+    }
+
+    /**
+     * Invoca o metodo que cria uma playlist aleatória.
+     * @param utilizador    nome do Utilizador
+     * @param playlist  a criar
+     */
+    public void playlistAleatoria(String utilizador, String playlist){
+        criar_Play_aleatoria(utilizador, playlist);
+    }
+
+    /**
+     * Cria uma playlist.
+     * @param utilizador    nome do Utilizador
+     * @param playlist  a verificar
+     * @return lista de conteudo do utilziador com base no genero
+     */
+    public void criar_Playist(String utilizador, String playlist){
+        Playlist p = new Playlist();
+        Map<String, Playlist> playlists = this.comuns.get(utilizador).getPlaylists();
+        playlists.put(playlist, p);
+        this.comuns.get(utilizador).setPlaylists(playlists);
+    }
+
+    /**
+     * Devolve a lista de conteudo de um utilizador com base no artista
+     * @param u    nome do Utilizador
+     * @param g    genero
+     * @return lista de conteudo do utilziador com base no genero
+     */
+    public List<String> byGenero(String u, String g){
+        Map<String, String> map_conteudo = this.comuns.get(u).getMyConteudo();
+        List<String> nomes = new ArrayList<>(map_conteudo.keySet());
+
+        List<String> y = new ArrayList<>();
+        for(String a : nomes){
+            String categoria = map_conteudo.get(a);
+            if(g.equals(categoria))
+                y.add(a);
+        }
+        return y;
+    }
+
+    /**
+     * Invoca o metodo que cria uma playlist com base num género.
+     * @param utilizador    nome do Utilizador
+     * @param playlist  a verificar
+     * @param genero    selecionado para a criação da playlist
+     * @return lista de conteudo do utilziador com base no genero
+     */
+    public List<String> playlistGenero(String utilizador, String playlist, String genero){
+        criar_Playist(utilizador, playlist);
+        List<String> conteudo_do_artista = byArtista(utilizador, genero);
+        return  conteudo_do_artista;
+    }
+
+    /**
+     * Adiciona conteudo a uma playlist.
+     * @param u     nome do Utilizador
+     * @param p     a adicionar conteudo
+     * @param c     a adicionar à playlist
+     * @param g     da playlist
+     */
+    public void addConteudoAux(String u, String p, List<String> c, String g){
+        Map<String,Playlist> playlists = this.comuns.get(u).getPlaylists();
+        Map<String, String> aux = playlists.get(p).getMyConteudo();
+        for(String a : c)
+            aux.put(a, g);
+        playlists.put(p, new Playlist(aux));
+        this.comuns.get(u).setPlaylists(playlists);
+    }
+
+    /**
+     * Invoca o metodo que adiciona conteudo a uma playlist.
+     * @param utilizador        nome do Utilizador
+     * @param playlist      a adicionar conteudo
+     * @param conteudo      a adicionar à playlist
+     * @param genero        da playlist
+     */
+    public void addConteudo(String utilizador,String playlist, List<String> conteudo, String genero){
+        addConteudoAux(utilizador, playlist, conteudo, genero);
+    }
+
+    /**
+     * Devolve a lista de conteudo de um utilizador com base no artista
+     * @param u    nome do Utilizador
+     * @param a    artista
+     * @return lista de conteudo do utilziador com base no artista
+     */
+    public List<String> byArtista(String u, String a){
+        List<String> x = new ArrayList<>();
+        Set<String>  set_conteudo_u = this.comuns.get(u).getMyConteudo().keySet();
+        List<String> list_conteudo_u = new ArrayList<>(set_conteudo_u);
+        for(String c : this.conteudo.keySet())
+            if(list_conteudo_u.contains(c) && this.conteudo.get(c).getArtista().equals(a))
+                x.add(c);
+        return x;
+    }
+
+    /**
+     * Invoca o metodo que cria uma playlist com base num artista.
+     * @param utilizador    nome do Utilizador
+     * @param playlist  a verificar
+     * @param artista    selecionado para a criação da playlist
+     * @return lista de conteudo do utilziador com base no artista
+     */
+    public List<String> playlistArtista(String utilizador, String playlist, String artista){
+        criar_Playist(utilizador, playlist);
+        List<String> conteudo_do_artista = byArtista(utilizador, artista);
+        return  conteudo_do_artista;
+    }
+
+    /**
+     * Adiciona conteudo a uma playlist.
+     * @param u     nome do Utilizador
+     * @param p     a adicionar conteudo
+     * @param c     a adicionar à playlist
+     */
+    public void adConteudoAux(String u, String p, List<String> c){
+        Map<String,Playlist> playlists = this.comuns.get(u).getPlaylists();
+        Map<String, String> aux = playlists.get(p).getMyConteudo();
+        Map<String, String> x = this.comuns.get(u).getMyConteudo();
+        for(String a : c){
+            aux.put(a, x.get(a));
+        }
+        playlists.put(p, new Playlist(aux));
+        this.comuns.get(u).setPlaylists(playlists);
+    }
+
+    /**
+     * Invoca o metodo que adiciona conteudo a uma playlist.
+     * @param utilizador        nome do Utilizador
+     * @param playlist      a adicionar conteudo
+     * @param conteudo      a adicionar à playlist
+     */
+    public void adConteudo(String utilizador,String playlist, List<String> conteudo, String artista){
+        adConteudoAux(utilizador, playlist, conteudo);
+    }
+
+
+
+
 }
